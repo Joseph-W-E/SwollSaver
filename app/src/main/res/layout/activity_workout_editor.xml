@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:padding="5dp"
+        android:layout_margin="16dp"
+        android:id="@+id/add_title"
+        android:hint="@string/title_hint"
+        android:capitalize="sentences"/>
+
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/add_title"
+        android:padding="5dp"
+        android:layout_margin="16dp"
+        android:id="@+id/add_description"
+        android:hint="@string/description_hint"
+        android:capitalize="sentences"/>
+
+
+
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/inner_relative_layout_editor"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="16dp">
+
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/cancel"
+        android:id="@+id/cancel_button"
+        android:onClick="cancelButton"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/cancel_button"
+        android:layout_toEndOf="@id/cancel_button"
+        android:text="@string/add"
+        android:id="@+id/add_button"
+        android:layout_centerHorizontal="true"
+        android:onClick="addButton"/>
+
+    </RelativeLayout>
+
+
+
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/inner_relative_layout_editor"
+        android:text="@string/select_date"
+        android:id="@+id/select_date_button"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="10dp"
+        android:onClick="dateButton"/>
+
+</RelativeLayout>

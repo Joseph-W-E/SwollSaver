@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Swoll Saver</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="select_date">Select a date</string>
+    <string name="cancel">Cancel</string>
+    <string name="add">Add</string>
+    <string name="edit">Edit</string>
+    <string name="done">Done</string>
+    <string name="delete">Delete</string>
+    <string name="finish">Finish</string>
+    <string name="date_hint">Date...</string>
+    <string name="title_hint">Workout title...</string>
+    <string name="description_hint">Workout details...</string>
+    <string name="home">Home</string>
+
+</resources>

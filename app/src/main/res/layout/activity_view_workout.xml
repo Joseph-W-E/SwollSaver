@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:padding="5dp"
+        android:layout_margin="16dp"
+        android:id="@+id/view_title"
+        android:hint="@string/title_hint"/>
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/view_title"
+        android:padding="5dp"
+        android:layout_margin="16dp"
+        android:id="@+id/view_description"
+        android:hint="@string/description_hint"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/view_description"
+        android:padding="5dp"
+        android:layout_margin="16dp"
+        android:id="@+id/view_date"
+        android:hint="@string/date_hint"/>
+
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/inner_relative_layout_editor"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="16dp">
+
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cancel"
+            android:id="@+id/cancel_button"
+            android:onClick="cancelButton"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/cancel_button"
+            android:layout_toEndOf="@id/cancel_button"
+            android:text="@string/edit"
+            android:id="@+id/edit_button"
+            android:layout_centerHorizontal="true"
+            android:onClick="editButton"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/edit_button"
+            android:layout_toEndOf="@id/edit_button"
+            android:text="@string/delete"
+            android:onClick="deleteButton"/>
+
+    </RelativeLayout>
+
+
+</RelativeLayout>
