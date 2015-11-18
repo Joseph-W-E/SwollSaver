@@ -1,0 +1,5 @@
+C:\Users\Joey Elliott\AndroidStudioProjects\SwollSaver\app\build\intermediates\classes\release
+C:\Users\Joey Elliott\AndroidStudioProjects\SwollSaver\app\build\intermediates\pre-dexed\release\support-annotations-21.0.3-9b35c2ac10c1859373f3ae15db78d116fbf0c008.jar
+C:\Users\Joey Elliott\AndroidStudioProjects\SwollSaver\app\build\intermediates\pre-dexed\release\internal_impl-21.0.3-92f60722a9cf017d70e1c44281affc67c3d84db9.jar
+C:\Users\Joey Elliott\AndroidStudioProjects\SwollSaver\app\build\intermediates\pre-dexed\release\classes-a7bc179ad02953371ad8ecc6018a415bcf38eb30.jar
+C:\Users\Joey Elliott\AndroidStudioProjects\SwollSaver\app\build\intermediates\pre-dexed\release\classes-651484e0566b81260e6a8d73820523c331052ca4.jar

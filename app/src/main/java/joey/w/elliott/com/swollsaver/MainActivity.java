@@ -1,91 +1,119 @@
 package joey.w.elliott.com.swollsaver;
 
-import android.app.ActionBar;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
+import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 
 public class MainActivity extends ActionBarActivity {
 
     private static ArrayList<Workout> workouts;
-    private ArrayList<WorkoutFolder> workoutFolders;
-    private ListView listview;
-    private WorkoutFolderAdapter adapter;
+    private ListViewInnerLayoutAdapter adapter;
+    private long currentTimeInMillis = 0;
+    private Date currentMonth;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        currentMonth = getTodaysDate();
+        initializeListView(currentMonth);
 
-        // Get the list of workouts, already sorted by date
-        loadWorkouts();
+        ImageButton previousMonthButton = (ImageButton) findViewById(R.id.previous_month_button);
+        ImageButton nextMonthButton = (ImageButton) findViewById(R.id.next_month_button);
 
-        // Load all the folders (Note: they aren't saved permanently)
-        populateListView();
+        previousMonthButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // Set the current month to the previous month
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTimeInMillis(currentTimeInMillis);
+                calendar.add(Calendar.MONTH, -1);
+                currentTimeInMillis = calendar.getTimeInMillis();
+                Date date = new Date();
+                date.setTime(currentTimeInMillis);
+                currentMonth = date;
+
+                // Update the layout
+                initializeListView(currentMonth);
+            }
+        });
+
+        nextMonthButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // Set the current month to the previous month
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTimeInMillis(currentTimeInMillis);
+                calendar.add(Calendar.MONTH, 1);
+                currentTimeInMillis = calendar.getTimeInMillis();
+                Date date = new Date();
+                date.setTime(currentTimeInMillis);
+                currentMonth = date;
+
+                // Update the layout
+                initializeListView(currentMonth);
+            }
+        });
+
     }
 
-    private void loadWorkouts() {
+    private Date getTodaysDate() {
+        // Get today's date
+        Calendar rightNow = Calendar.getInstance();
+        currentTimeInMillis = rightNow.getTimeInMillis();
+        Date date = new Date();
+        date.setTime(currentTimeInMillis);
+        return date;
+    }
+
+    private void initializeListView(Date date) {
+        // Set the current month
+        TextView monthText = (TextView) findViewById(R.id.month_text);
+        SimpleDateFormat monthTextSDF = new SimpleDateFormat("MMMM yyyy");
+        monthText.setText(monthTextSDF.format(date));
+
+        // Get the workouts for this month
         WorkoutDataSource dataSource = new WorkoutDataSource(this);
         dataSource.open();
-        workouts = dataSource.getWorkouts();
+        workouts = dataSource.getWorkouts(date);
         if (workouts == null) {
             workouts = new ArrayList<Workout>();
         }
         dataSource.close();
-    }
 
-    private void populateListView() {
-        // Create the list of items
-        workoutFolders = new ArrayList<WorkoutFolder>();
-        Date lastDate = null;
-        Date currDate;
-        String lastDateStr = null;
-        String currDateStr;
+        // Get an ArrayList of dates with corresponding workouts
+        ArrayList<Date> days = new ArrayList<Date>();
+        HashSet<String> workoutDatesStrings = new HashSet<String>();
+        SimpleDateFormat sdfCompare = new SimpleDateFormat("yyyy-MM-dd");
+        String workoutsString;
 
-        SimpleDateFormat sdf = new SimpleDateFormat("MMM dd yyyy");
         for (int i = 0; i < workouts.size(); i++) {
-            currDate = workouts.get(i).getDate();
-            currDateStr = sdf.format(currDate);
-
-            // If a folder for that date doesn't already exist, create one
-            if (lastDate == null || !currDateStr.equals(lastDateStr)) {
-                SimpleDateFormat sdf2 = new SimpleDateFormat("EEEE");
-                workoutFolders.add(new WorkoutFolder(currDate, sdf2.format(currDate)));
+            workoutsString = sdfCompare.format(workouts.get(i).getDate());
+            if (workoutDatesStrings.add(workoutsString)) {
+                days.add(workouts.get(i).getDate());
             }
-
-            lastDate = currDate;
-            lastDateStr = currDateStr;
         }
 
-        // Build the Adapter
-        adapter = new WorkoutFolderAdapter(this, R.layout.workout_folders, workoutFolders);
+        // Build the adapter
+        adapter = new ListViewInnerLayoutAdapter(this, R.layout.listview_inner_layout, days, workouts);
 
         // Configure the list view
-        listview = (ListView) findViewById(R.id.list_view);
+        ListView listview = (ListView) findViewById(R.id.list_view);
         listview.setAdapter(adapter);
-
-        // Set an OnItemClickListener
-        // Brings to InFolderActivity
-        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(MainActivity.this, InFolderActivity.class);
-                intent.putExtra("folderDate", workoutFolders.get(position).getDate());
-                startActivity(intent);
-            }
-        });
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -103,25 +131,56 @@ public class MainActivity extends ActionBarActivity {
 
         switch (id) {
             case R.id.add_workout:
-                AddWorkoutActivityIntent();
-                break;
+                AddWorkoutActivityIntent(false);
+                return true;
+            case R.id.return_to_today:
+                currentMonth = getTodaysDate();
+                initializeListView(currentMonth);
+                return true;
+            case R.id.delete_all_workouts:
+                this.deleteAllWorkouts();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
+    private void deleteAllWorkouts() {
 
-    private void AddWorkoutActivityIntent() {
+        new AlertDialog.Builder(this)
+                .setTitle(android.R.drawable.ic_dialog_alert)
+                .setTitle("Delete All Workouts")
+                .setMessage("Are you sure you want to delete all your workouts?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        WorkoutDataSource dataSource = new WorkoutDataSource(getApplicationContext());
+                        dataSource.open();
+                        dataSource.deleteAllWorkouts();
+                        dataSource.close();
+                        initializeListView(getTodaysDate());
+                    }
+                })
+                .setNegativeButton("No", null)
+                .show();
+
+
+    }
+
+    public void AddWorkoutActivityIntent(Boolean edit) {
         Intent intent = new Intent(this, AddWorkoutActivity.class);
+        if (edit) {
+            // Get the workout that is going to be edited
+
+        }
         startActivity(intent);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        loadWorkouts();
         adapter.clear();
-        populateListView();
+        initializeListView(getTodaysDate());
     }
 
 }

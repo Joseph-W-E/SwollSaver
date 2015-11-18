@@ -6,9 +6,27 @@
 
     <item android:id="@+id/add_workout"
         android:title="@string/add"
-        android:orderInCategory="99"
-        app:showAsAction="always"
-        android:icon="@drawable/ic_launcher" />
+        android:orderInCategory="10"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_action_new" />
+
+
+    <item android:id="@+id/return_to_today"
+        android:title="@string/return_to_today"
+        android:orderInCategory="50"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_action_go_to_today" />
+
+
+
+
+
+    <item android:id="@+id/delete_all_workouts"
+        android:title="@string/delete_all"
+        android:orderInCategory="100"
+        app:showAsAction="never"
+        android:icon="@drawable/ic_action_overflow" />
+
 
 
 </menu>

@@ -10,6 +10,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -38,19 +39,16 @@ public class WorkoutDataSource {
     public void createWorkout(Workout workout) {
         String title = workout.getTitle();
         String description = workout.getDescription();
-        Date date = workout.getDate();
-        DateFormat dateFormat = SimpleDateFormat.getDateTimeInstance();
-        String dateString = dateFormat.format(date);
+        long timeInMillis = workout.getDate().getTime();
 
         ContentValues values = new ContentValues();
         values.put(WorkoutSQLiteHelper.COLUMN_TITLE, title);
         values.put(WorkoutSQLiteHelper.COLUMN_DESCRIPTION, description);
-        values.put(WorkoutSQLiteHelper.COLUMN_DATE, dateString);
-        database.insert(WorkoutSQLiteHelper.TABLE_WORKOUTS, null,
-                values);
+        values.put(WorkoutSQLiteHelper.COLUMN_DATE, timeInMillis);
+
+        database.insert(WorkoutSQLiteHelper.TABLE_WORKOUTS, null, values);
     }
 
-    // Probably don't need
     public void deleteWorkout(Workout workout) {
         long id = workout.getID();
         //System.out.println("Comment deleted with id: " + id);
@@ -61,6 +59,13 @@ public class WorkoutDataSource {
     public void deleteWorkout(long id) {
         database.delete(WorkoutSQLiteHelper.TABLE_WORKOUTS, WorkoutSQLiteHelper.COLUMN_ID
                 + " = " + id, null);
+    }
+
+    public void deleteAllWorkouts() {
+        ArrayList<Workout> workouts = this.getWorkouts();
+        for (int i = 0; i < workouts.size(); i++) {
+            deleteWorkout(workouts.get(i).getID());
+        }
     }
 
     public ArrayList<Workout> getWorkouts() {
@@ -76,34 +81,44 @@ public class WorkoutDataSource {
             workouts.add(workout);
             cursor.moveToNext();
         }
+
         // make sure to close the cursor
         cursor.close();
         return workouts;
     }
 
+    /* Only gets the workouts for the given month. */
     public ArrayList<Workout> getWorkouts(Date date) {
-        // Only gets workouts for the given date
-        SimpleDateFormat sdf = new SimpleDateFormat("MMM dd yyyy");
-        String dateString = sdf.format(date);
-        String workoutDateString;
+        // Convert the date into milliseconds
+        long timeInMillis = date.getTime();
+
+        // Get a calendar instance for the time in milliseconds
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(timeInMillis);
 
         ArrayList<Workout> workouts = new ArrayList<Workout>();
 
         Cursor cursor = database.query(WorkoutSQLiteHelper.TABLE_WORKOUTS,
                 allColumns, null, null, null, null, WorkoutSQLiteHelper.COLUMN_DATE + " DESC");
 
+        // Get a calendar instance for the row's time in milliseconds
+        Calendar rowCalendar = Calendar.getInstance();
+
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             Workout workout = cursorToWorkout(cursor);
-            workoutDateString = sdf.format(workout.getDate());
+            rowCalendar.setTimeInMillis(workout.getDate().getTime());
 
-            // if the date doesn't match the given one, move on
-            if (dateString.equals(workoutDateString)) {
+            // if the dates are in the same month and year, add the workout
+            if ((calendar.get(Calendar.YEAR) == rowCalendar.get(Calendar.YEAR)) &&
+                    (calendar.get(Calendar.MONTH) == rowCalendar.get(Calendar.MONTH))) {
                 workouts.add(workout);
             }
+
             cursor.moveToNext();
         }
-        // make sure to close the cursor
+
+        // Make sure to close the cursor!!!
         cursor.close();
         return workouts;
     }
@@ -113,13 +128,14 @@ public class WorkoutDataSource {
         workout.setID(cursor.getLong(0));
         workout.setTitle(cursor.getString(1));
         workout.setDescription(cursor.getString(2));
-        DateFormat dateFormat = SimpleDateFormat.getDateTimeInstance();
 
-        try{
-            workout.setDate(dateFormat.parse(cursor.getString(3)));
-        } catch (ParseException e) {
-            workout.setDate(new Date());
-        }
+        // The date is currently in milliseconds
+        Date date = new Date();
+
+        // For future reference, you may have to surround this with try/catch
+        date.setTime(Long.parseLong(cursor.getString(3)));
+
+        workout.setDate(date);
 
         return workout;
     }

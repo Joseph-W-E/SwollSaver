@@ -10,10 +10,16 @@
     <string name="edit">Edit</string>
     <string name="done">Done</string>
     <string name="delete">Delete</string>
+    <string name="delete_all">Delete All</string>
     <string name="finish">Finish</string>
+    <string name="accept">Accept</string>
     <string name="date_hint">Date...</string>
     <string name="title_hint">Workout title...</string>
     <string name="description_hint">Workout details...</string>
     <string name="home">Home</string>
+    <string name="temporary_date">Temporary Date</string>
+    <string name="temporary_day">Temporary Day</string>
+    <string name="return_to_today">Return To Today</string>
+    <string name="month_spinner">Month Spinner</string>
 
 </resources>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/lvil_outerLL"
+    android:orientation="horizontal"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:id="@+id/lvil_innerRL"
+        android:layout_width="48dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp">
+
+        <TextView
+            android:id="@+id/day_of_month_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/temporary_day"
+            android:textSize="28sp"
+            android:textColor="@color/secondary_text"
+            android:layout_centerHorizontal="true"/>
+
+        <TextView
+            android:id="@+id/day_of_month_day"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/temporary_day"
+            android:textSize="14sp"
+            android:layout_below="@id/day_of_month_date"
+            android:textColor="@color/secondary_text"
+            android:layout_centerHorizontal="true"/>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/lvil_innerLL"
+        android:layout_toRightOf="@id/lvil_innerRL"
+        android:layout_toEndOf="@id/lvil_innerRL"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+    </LinearLayout>
+
+</RelativeLayout><!-- From: file:/C:/Users/Joey%20Elliott/AndroidStudioProjects/SwollSaver/app/src/main/res/layout/listview_inner_layout.xml -->

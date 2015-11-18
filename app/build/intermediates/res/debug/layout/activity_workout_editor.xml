@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:padding="5dp"
+        android:layout_margin="16dp"
+        android:id="@+id/add_title"
+        android:hint="@string/title_hint"
+        android:capitalize="sentences"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/add_title"
+        android:padding="5dp"
+        android:layout_margin="16dp"
+        android:id="@+id/add_description"
+        android:hint="@string/description_hint"
+        android:capitalize="sentences"/>
+
+</RelativeLayout><!-- From: file:/C:/Users/Joey%20Elliott/AndroidStudioProjects/SwollSaver/app/src/main/res/layout/activity_workout_editor.xml -->
